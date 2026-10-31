@@ -1,7 +1,7 @@
 /* ============================================================
    1. TRIGGERS
    ============================================================ */
-use Proyecto;
+use Biblioteca;
 go
 
 /* 1.1 Valida las fechas y el estado del prestamo. */

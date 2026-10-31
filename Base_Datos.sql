@@ -2,9 +2,10 @@
 -- PARTE ADMINISTRATIVA DE LA BIBLIOTECA
 -- ==========================================================
 use master;
-create database Proyecto;
+create database Biblioteca;
 
-use Proyecto;
+use Biblioteca;
+go
 
 --! Tabla Empleado
 CREATE TABLE empleado
