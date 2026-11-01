@@ -1,14 +1,27 @@
--- ==========================================================
--- PARTE ADMINISTRATIVA DE LA BIBLIOTECA
--- ==========================================================
 use master;
 create database Biblioteca;
 
 use Biblioteca;
 go
 
+-- ==========================================================
+-- CREACION DE ESQUEMAS
+-- ==========================================================
+
+create schema bibliotecario;
+go
+
+create schema cliente;
+go
+
+create schema editor;
+go
+
+-- ==========================================================
+-- PARTE ADMINISTRATIVA DE LA BIBLIOTECA
+-- ==========================================================
 --! Tabla Empleado
-CREATE TABLE empleado
+CREATE TABLE bibliotecario.empleado
 (
     id_empleado INT IDENTITY(1,1),
     dui VARCHAR(10) NOT NULL,
@@ -25,7 +38,7 @@ GO
 
 
 --! Tabla Socio
-CREATE TABLE socio
+CREATE TABLE cliente.socio
 (
     id_socio INT IDENTITY(1,1),
     dui VARCHAR(10) NOT NULL,
@@ -42,7 +55,7 @@ GO
 
 
 --! Tabla Libro
-CREATE TABLE libro
+CREATE TABLE editor.libro
 (
     id_libro INT IDENTITY(1,1),
     nombre VARCHAR(150) NOT NULL,
@@ -54,7 +67,7 @@ GO
 
 
 --! Tabla Prestamo
-CREATE TABLE prestamo
+CREATE TABLE bibliotecario.prestamo
 (
     id_prestamo INT IDENTITY(1,1),
     fecha_prestamo DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -85,7 +98,7 @@ GO
 
 
 --! Tabla Multa
-CREATE TABLE multa
+CREATE TABLE bibliotecario.multa
 (
     id_multa INT IDENTITY(1,1),
     fecha_multa DATE NOT NULL,
@@ -111,7 +124,7 @@ GO
 
 
 --! Tabla Ejemplar
-CREATE TABLE ejemplar
+CREATE TABLE bibliotecario.ejemplar
 (
     id_ejemplar INT IDENTITY(1,1),
     estado VARCHAR(20) NOT NULL DEFAULT 'LIBRE',
@@ -132,7 +145,7 @@ GO
 
 
 --! Tabla Prestamo Ejemplar
-CREATE TABLE prestamo_ejemplar
+CREATE TABLE bibliotecario.prestamo_ejemplar
 (
     id_prestamo INT NOT NULL,
     id_ejemplar INT NOT NULL,
@@ -160,7 +173,7 @@ GO
 -- ==========================================================
 
 --! Tabla Editorial
-CREATE TABLE editorial
+CREATE TABLE editor.editorial
 (
     id_editorial INT IDENTITY(1,1),
     nombre VARCHAR(150) NOT NULL,
@@ -183,7 +196,7 @@ GO
 
 
 --! Tabla Libro Editorial
-CREATE TABLE libro_editorial
+CREATE TABLE editor.libro_editorial
 (
     id_libro INT NOT NULL,
     id_editorial INT NOT NULL,
@@ -207,7 +220,7 @@ GO
 
 
 --! Tabla Autor
-CREATE TABLE autor
+CREATE TABLE editor.autor
 (
     id_autor INT IDENTITY(1,1),
     nombre VARCHAR(100) NOT NULL,
@@ -224,7 +237,7 @@ GO
 
 
 --! Tabla Genero
-CREATE TABLE genero
+CREATE TABLE editor.genero
 (
     id_genero INT IDENTITY(1,1),
     nombre VARCHAR(150) NOT NULL,
@@ -237,7 +250,7 @@ GO
 
 
 --! Tabla Libro Genero
-CREATE TABLE libro_genero
+CREATE TABLE editor.libro_genero
 (
     id_genero INT NOT NULL,
     id_libro INT NOT NULL,
@@ -261,7 +274,7 @@ GO
 
 
 --! Tabla Libro Autor
-CREATE TABLE libro_autor
+CREATE TABLE editor.libro_autor
 (
     id_libro INT NOT NULL,
     id_autor INT NOT NULL,
