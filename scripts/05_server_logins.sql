@@ -33,7 +33,7 @@ IF SUSER_ID(N'eduardo_pacas') IS NULL
     CREATE LOGIN [eduardo_pacas] WITH PASSWORD = 'Eduardo_Biblioteca2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 IF SUSER_ID(N'profesor_biblioteca') IS NULL
-    CREATE LOGIN [profesor_biblioteca] WITH PASSWORD = 'Profesor_Biblioteca2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [profesor_biblioteca] WITH PASSWORD = 'Docente_Acceso2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- 2. Vincular los logins con los usuarios que vienen en el respaldo.
