@@ -1,7 +1,9 @@
-# Nota sobre archivos .bak y SQL Server Agent
+# Archivos de respaldo y Jobs
 
-Este directorio contiene scripts para configurar Jobs y una plantilla de restauración. No incluye archivos de respaldo de la base de datos.
+Los archivos de respaldo de la base de datos se generan desde SQL Server y se almacenan en los directorios configurados para cada tipo de respaldo.
 
-Los archivos `.bak` y `.trn` pueden contener datos personales (por ejemplo, nombres, DUI y fechas de nacimiento). No deben publicarse en un repositorio público. Compartirlos únicamente si el repositorio es privado y el equipo/profesor autoriza expresamente su inclusión.
+Los scripts de esta carpeta permiten crear los Jobs de SQL Server Agent que se encargan de ejecutar los respaldos de forma programada.
 
-Los Jobs existentes en una instancia no se transfieren al clonar el repositorio: se recrean ejecutando los scripts SQL en esa instancia. Los historiales de ejecución y los archivos de respaldo tampoco forman parte del repositorio.
+Al trabajar desde otro equipo o clonar el repositorio, se deben ejecutar nuevamente los scripts para configurar los Jobs en la instancia de SQL Server correspondiente.
+
+Los archivos de respaldo y el historial de ejecución se mantienen en el servidor y no se generan automáticamente al descargar el proyecto.
