@@ -2,6 +2,8 @@
 -- TRIGGERS DE LA BIBLIOTECA
 -- ==========================================================
 
+use Biblioteca;
+
 CREATE TRIGGER prestamos.tg_generar_multa_por_retraso
 ON prestamos.prestamo
 AFTER UPDATE

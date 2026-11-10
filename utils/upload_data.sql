@@ -1,8 +1,8 @@
 use Biblioteca;
 go
 
-create database biblioteca_prueba;
-use biblioteca_prueba;
+create database biblioteca;
+use biblioteca;
 
 /*
     1) docker exec -u 0 -it sqlserver-2025 sh

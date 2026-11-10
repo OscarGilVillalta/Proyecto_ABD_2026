@@ -6,17 +6,17 @@ GO
 
 -- 1. Login para el rol bibliotecario
 IF SUSER_ID(N'Bibliotecario') IS NULL
-    CREATE LOGIN [Bibliotecario] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [Bibliotecario] WITH PASSWORD = 'Bibliotecari02026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- 2. Login para el rol analista
 IF SUSER_ID(N'Analista') IS NULL
-    CREATE LOGIN [Analista] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [Analista] WITH PASSWORD = 'Anal1sta2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- 3. Login para rol usuario_biblioteca
 IF SUSER_ID(N'Usuario') IS NULL
-    CREATE LOGIN [Usuario] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [Usuario] WITH PASSWORD = 'Usuar102026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- 4. Login para rol gestor_multas
@@ -26,7 +26,7 @@ GO
 
 -- 5. Login para rol gestor_rrhh
 IF SUSER_ID(N'Gestor_rrhh') IS NULL
-    CREATE LOGIN [Gestor_rrhh] WITH PASSWORD = 'Gestor_r2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [Gestor_rrhh] WITH PASSWORD = 'G3stor_r22026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- 6. Login para rol gestor_socios
@@ -46,7 +46,7 @@ GO
 
 -- 9. Login para rol seguridad
 IF SUSER_ID(N'Seguridad') IS NULL
-    CREATE LOGIN [Seguridad] WITH PASSWORD = 'Seguridad2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+    CREATE LOGIN [Seguridad] WITH PASSWORD = 'Segur1dad2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- Creacion de usuarios para la base de datos
@@ -82,7 +82,7 @@ ELSE
 GO
 
 -- 5. Usuario para el rol gestor_rrhh
-IF DATABASE_PRINCIPAL_ID(N'Gestor_multas') IS NULL
+IF DATABASE_PRINCIPAL_ID(N'Gestor_rrhh') IS NULL
     CREATE USER [Gestor_rrhh] FOR LOGIN [Gestor_rrhh];
 ELSE
     ALTER USER [Gestor_rrhh] WITH LOGIN = [Gestor_rrhh];
