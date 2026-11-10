@@ -2,152 +2,116 @@
 USE master;
 GO
 
--- (cambiar las contraseñas al momento de ejecutar)
+-- (cambiar todas las contraseñas al momento de ejecutar)
 
--- Logins para el rol bibliotecario
-IF SUSER_ID(N'Bibliotecario1') IS NULL
-    CREATE LOGIN [Bibliotecario1] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Bibliotecario2') IS NULL
-    CREATE LOGIN [Bibliotecario2] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Bibliotecario3') IS NULL
-    CREATE LOGIN [Bibliotecario3] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Bibliotecario4') IS NULL
-    CREATE LOGIN [Bibliotecario4] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Bibliotecario5') IS NULL
-    CREATE LOGIN [Bibliotecario5] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+-- 1. Login para el rol bibliotecario
+IF SUSER_ID(N'Bibliotecario') IS NULL
+    CREATE LOGIN [Bibliotecario] WITH PASSWORD = 'Bibliotecario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
--- Logins para el rol analista
-IF SUSER_ID(N'Analista1') IS NULL
-    CREATE LOGIN [Analista1] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Analista2') IS NULL
-    CREATE LOGIN [Analista2] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Analista3') IS NULL
-    CREATE LOGIN [Analista3] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Analista4') IS NULL
-    CREATE LOGIN [Analista4] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
-GO
-IF SUSER_ID(N'Analista5') IS NULL
-    CREATE LOGIN [Analista5] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+-- 2. Login para el rol analista
+IF SUSER_ID(N'Analista') IS NULL
+    CREATE LOGIN [Analista] WITH PASSWORD = 'Analista2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
--- Logins para rol usuario_biblioteca
-IF SUSER_ID(N'Usuario1') IS NULL
-    CREATE LOGIN [Usuario1] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+-- 3. Login para rol usuario_biblioteca
+IF SUSER_ID(N'Usuario') IS NULL
+    CREATE LOGIN [Usuario] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
-IF SUSER_ID(N'Usuario2') IS NULL
-    CREATE LOGIN [Usuario2] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+
+-- 4. Login para rol gestor_multas
+IF SUSER_ID(N'Gestor_multas') IS NULL
+    CREATE LOGIN [Gestor_multas] WITH PASSWORD = 'Gestor_m2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
-IF SUSER_ID(N'Usuario3') IS NULL
-    CREATE LOGIN [Usuario3] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+
+-- 5. Login para rol gestor_rrhh
+IF SUSER_ID(N'Gestor_rrhh') IS NULL
+    CREATE LOGIN [Gestor_rrhh] WITH PASSWORD = 'Gestor_r2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
-IF SUSER_ID(N'Usuario4') IS NULL
-    CREATE LOGIN [Usuario4] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+
+-- 6. Login para rol gestor_socios
+IF SUSER_ID(N'Gestor_socios') IS NULL
+    CREATE LOGIN [Gestor_socios] WITH PASSWORD = 'Gestor_s2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
-IF SUSER_ID(N'Usuario5') IS NULL
-    CREATE LOGIN [Usuario5] WITH PASSWORD = 'Usuario2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+
+-- 7. Login para rol gestor_prestamos
+IF SUSER_ID(N'Gestor_prestamos') IS NULL
+    CREATE LOGIN [Gestor_prestamos] WITH PASSWORD = 'Gestor_p2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+GO
+
+-- 8. Login para rol backup
+IF SUSER_ID(N'Operador_backup') IS NULL
+    CREATE LOGIN [Operador_backup] WITH PASSWORD = 'Backup2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+GO
+
+-- 9. Login para rol seguridad
+IF SUSER_ID(N'Seguridad') IS NULL
+    CREATE LOGIN [Seguridad] WITH PASSWORD = 'Seguridad2026!', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
 GO
 
 -- Creacion de usuarios para la base de datos
 USE Biblioteca;
 GO
 
--- Usuarios para el rol bilbiotecario
-IF DATABASE_PRINCIPAL_ID(N'Bibliotecario1') IS NULL
-    CREATE USER [Bibliotecario1] FOR LOGIN [Bibliotecario1];
+-- 1. Usuario para el rol bilbiotecario
+IF DATABASE_PRINCIPAL_ID(N'Bibliotecario') IS NULL
+    CREATE USER [Bibliotecario] FOR LOGIN [Bibliotecario];
 ELSE
-    ALTER USER [Bibliotecario1] WITH LOGIN = [Bibliotecario1];
+    ALTER USER [Bibliotecario] WITH LOGIN = [Bibliotecario];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Bibliotecario2') IS NULL
-    CREATE USER [Bibliotecario2] FOR LOGIN [Bibliotecario2];
+-- 2. Usuario para el rol analista
+IF DATABASE_PRINCIPAL_ID(N'Analista') IS NULL
+    CREATE USER [Analista] FOR LOGIN [Analista];
 ELSE
-    ALTER USER [Bibliotecario2] WITH LOGIN = [Bibliotecario2];
+    ALTER USER [Analista] WITH LOGIN = [Analista];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Bibliotecario3') IS NULL
-    CREATE USER [Bibliotecario3] FOR LOGIN [Bibliotecario3];
+-- 3. Usuario para el rol usuario_biblioteca
+IF DATABASE_PRINCIPAL_ID(N'Usuario') IS NULL
+    CREATE USER [Usuario] FOR LOGIN [Usuario];
 ELSE
-    ALTER USER [Bibliotecario3] WITH LOGIN = [Bibliotecario3];
+    ALTER USER [Usuario] WITH LOGIN = [Usuario];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Bibliotecario4') IS NULL
-    CREATE USER [Bibliotecario4] FOR LOGIN [Bibliotecario4];
+-- 4. Usuario para el rol gestor_multas
+IF DATABASE_PRINCIPAL_ID(N'Gestor_multas') IS NULL
+    CREATE USER [Gestor_multas] FOR LOGIN [Gestor_multas];
 ELSE
-    ALTER USER [Bibliotecario4] WITH LOGIN = [Bibliotecario4];
+    ALTER USER [Gestor_multas] WITH LOGIN = [Gestor_multas];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Bibliotecario5') IS NULL
-    CREATE USER [Bibliotecario5] FOR LOGIN [Bibliotecario5];
+-- 5. Usuario para el rol gestor_rrhh
+IF DATABASE_PRINCIPAL_ID(N'Gestor_multas') IS NULL
+    CREATE USER [Gestor_rrhh] FOR LOGIN [Gestor_rrhh];
 ELSE
-    ALTER USER [Bibliotecario5] WITH LOGIN = [Bibliotecario5];
+    ALTER USER [Gestor_rrhh] WITH LOGIN = [Gestor_rrhh];
 GO
 
--- Usuarios para el rol analista
-IF DATABASE_PRINCIPAL_ID(N'Analista1') IS NULL
-    CREATE USER [Analista1] FOR LOGIN [Analista1];
+-- 6. Usuario para el rol gestor_socios
+IF DATABASE_PRINCIPAL_ID(N'Gestor_socios') IS NULL
+    CREATE USER [Gestor_socios] FOR LOGIN [Gestor_socios];
 ELSE
-    ALTER USER [Analista1] WITH LOGIN = [Analista1];
+    ALTER USER [Gestor_socios] WITH LOGIN = [Gestor_socios];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Analista2') IS NULL
-    CREATE USER [Analista2] FOR LOGIN [Analista2];
+-- 7. Usuario para el gestor_prestamos
+IF DATABASE_PRINCIPAL_ID(N'Gestor_prestamos') IS NULL
+    CREATE USER [Gestor_prestamos] FOR LOGIN [Gestor_prestamos];
 ELSE
-    ALTER USER [Analista2] WITH LOGIN = [Analista2];
+    ALTER USER [Gestor_prestamos] WITH LOGIN = [Gestor_prestamos];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Analista3') IS NULL
-    CREATE USER [Analista3] FOR LOGIN [Analista3];
+-- 8. Usuario para el rol backup
+IF DATABASE_PRINCIPAL_ID(N'Operador_backup') IS NULL
+    CREATE USER [Operador_backup] FOR LOGIN [Operador_backup];
 ELSE
-    ALTER USER [Analista3] WITH LOGIN = [Analista3];
+    ALTER USER [Operador_backup] WITH LOGIN = [Operador_backup];
 GO
 
-IF DATABASE_PRINCIPAL_ID(N'Analista4') IS NULL
-    CREATE USER [Analista4] FOR LOGIN [Analista4];
+-- 9. Usuario para el rol seguridad
+IF DATABASE_PRINCIPAL_ID(N'Seguridad') IS NULL
+    CREATE USER [Seguridad] FOR LOGIN [Seguridad];
 ELSE
-    ALTER USER [Analista4] WITH LOGIN = [Analista4];
-GO
-
-IF DATABASE_PRINCIPAL_ID(N'Analista5') IS NULL
-    CREATE USER [Analista5] FOR LOGIN [Analista5];
-ELSE
-    ALTER USER [Analista5] WITH LOGIN = [Analista5];
-GO
-
--- Usuarios para el rol usuario_biblioteca
-IF DATABASE_PRINCIPAL_ID(N'Usuario1') IS NULL
-    CREATE USER [Usuario1] FOR LOGIN [Usuario1];
-ELSE
-    ALTER USER [Usuario1] WITH LOGIN = [Usuario1];
-GO
-
-IF DATABASE_PRINCIPAL_ID(N'Usuario2') IS NULL
-    CREATE USER [Usuario2] FOR LOGIN [Usuario2];
-ELSE
-    ALTER USER [Usuario2] WITH LOGIN = [Usuario2];
-GO
-
-IF DATABASE_PRINCIPAL_ID(N'Usuario3') IS NULL
-    CREATE USER [Usuario3] FOR LOGIN [Usuario3];
-ELSE
-    ALTER USER [Usuario3] WITH LOGIN = [Usuario3];
-GO
-
-IF DATABASE_PRINCIPAL_ID(N'Usuario4') IS NULL
-    CREATE USER [Usuario4] FOR LOGIN [Usuario4];
-ELSE
-    ALTER USER [Usuario4] WITH LOGIN = [Usuario4];
-GO
-
-IF DATABASE_PRINCIPAL_ID(N'Usuario5') IS NULL
-    CREATE USER [Usuario5] FOR LOGIN [Usuario5];
-ELSE
-    ALTER USER [Usuario5] WITH LOGIN = [Usuario5];
+    ALTER USER [Seguridad] WITH LOGIN = [Seguridad];
 GO
