@@ -3,25 +3,48 @@
 -- ================================================================
 
 -- ============================================================
--- Vista: Ranking de libros más prestados
+-- Vista: Tendencia Mensual
 -- ============================================================
-CREATE OR ALTER VIEW vw_RankingLibros AS
-WITH ConteoPrestamos AS (
+CREATE OR ALTER VIEW vw_TendenciaMensual AS
+WITH prestamosMensuales AS (
     SELECT 
-        l.id_libro AS LibroID,
-        l.nombre AS Libro,
-        COUNT(pe.id_ejemplar) AS TotalPrestamos
-    FROM catalogo.libro l
-    INNER JOIN catalogo.ejemplar e ON l.id_libro = e.id_libro
-    INNER JOIN prestamos.prestamo_ejemplar pe ON e.id_ejemplar = pe.id_ejemplar
-    GROUP BY l.id_libro, l.nombre
+        YEAR(p.fecha_prestamo) AS Anio,
+        MONTH(p.fecha_prestamo) AS [Número de mes calendario],
+        COUNT(p.id_prestamo) AS [Cantidad de Prestamos]
+    FROM prestamos.prestamo p
+    GROUP BY YEAR(p.fecha_prestamo), MONTH(p.fecha_prestamo)
 )
 SELECT 
-    LibroID,
-    Libro,
-    TotalPrestamos,
-    RANK() OVER (ORDER BY TotalPrestamos DESC) AS PosicionRanking
-FROM ConteoPrestamos;
+    Anio,
+    [Número de mes calendario],
+    [Cantidad de Prestamos],
+    SUM([Cantidad de Prestamos]) OVER (
+        PARTITION BY Anio 
+        ORDER BY [Número de mes calendario]
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS [Acumulado Anual]
+FROM prestamosMensuales;
+GO
+
+-- ============================================================
+-- Vista: Tendencia y Acumulado Mensual
+-- ============================================================
+CREATE OR ALTER VIEW vw_TendenciaYAcumuladoMensual AS
+WITH prestamosMensuales AS (
+    SELECT 
+        YEAR(p.fecha_prestamo) AS anio,
+        MONTH(p.fecha_prestamo) AS mes,
+        COUNT(p.id_prestamo) AS total_prestamos
+    FROM prestamos.prestamo p
+    GROUP BY YEAR(p.fecha_prestamo), MONTH(p.fecha_prestamo)
+)
+SELECT 
+    anio,
+    mes,
+    total_prestamos,
+    LAG(total_prestamos, 1, 0) OVER (ORDER BY anio, mes) AS prestamos_mes_anterior,
+    SUM(total_prestamos) OVER (PARTITION BY anio ORDER BY mes) AS acumuladoAnual
+FROM prestamosMensuales;
 GO
 
 -- ============================================================
@@ -51,27 +74,6 @@ SELECT
     ranking_genero
 FROM librosPrestados
 WHERE ranking_genero <= 3;
-GO
-
--- ============================================================
--- Vista: Total mensual, mes anterior y acumulado anual
--- ============================================================
-CREATE OR ALTER VIEW vw_TendenciaYAcumuladoMensual AS
-WITH prestamosMensuales AS (
-    SELECT 
-        YEAR(p.fecha_prestamo) AS anio,
-        MONTH(p.fecha_prestamo) AS mes,
-        COUNT(p.id_prestamo) AS total_prestamos
-    FROM prestamos.prestamo p
-    GROUP BY YEAR(p.fecha_prestamo), MONTH(p.fecha_prestamo)
-)
-SELECT 
-    anio,
-    mes,
-    total_prestamos,
-    LAG(total_prestamos, 1, 0) OVER (ORDER BY anio, mes) AS prestamos_mes_anterior,
-    SUM(total_prestamos) OVER (PARTITION BY anio ORDER BY mes) AS acumuladoAnual
-FROM prestamosMensuales;
 GO
 
 -- ============================================================
