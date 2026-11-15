@@ -1,27 +1,30 @@
-use master;
-create database Biblioteca;
+CREATE DATABASE Biblioteca;
+GO
 
-use Biblioteca;
-go
+USE Biblioteca;
+GO
 
--- ==========================================================
--- CREACION DE ESQUEMAS
--- ==========================================================
+CREATE SCHEMA rrhh AUTHORIZATION dbo;
+GO
 
-create schema bibliotecario;
-go
+CREATE SCHEMA socios AUTHORIZATION dbo;
+GO
 
-create schema cliente;
-go
+CREATE SCHEMA catalogo AUTHORIZATION dbo;
+GO
 
-create schema editor;
-go
+CREATE SCHEMA prestamos AUTHORIZATION dbo;
+GO
+
+CREATE SCHEMA operaciones AUTHORIZATION dbo;
+GO
 
 -- ==========================================================
 -- PARTE ADMINISTRATIVA DE LA BIBLIOTECA
 -- ==========================================================
+
 --! Tabla Empleado
-CREATE TABLE bibliotecario.empleado
+CREATE TABLE rrhh.empleado
 (
     id_empleado INT IDENTITY(1,1),
     dui VARCHAR(10) NOT NULL,
@@ -36,9 +39,8 @@ CREATE TABLE bibliotecario.empleado
 );
 GO
 
-
 --! Tabla Socio
-CREATE TABLE cliente.socio
+CREATE TABLE socios.socio
 (
     id_socio INT IDENTITY(1,1),
     dui VARCHAR(10) NOT NULL,
@@ -53,11 +55,10 @@ CREATE TABLE cliente.socio
 );
 GO
 
-
 --! Tabla Libro
-CREATE TABLE editor.libro
+CREATE TABLE catalogo.libro
 (
-    id_libro INT IDENTITY(1,1),
+    id_libro INT IDENTITY(1,1), 
     nombre VARCHAR(150) NOT NULL,
     fecha_publicacion DATE NOT NULL,
 
@@ -65,9 +66,8 @@ CREATE TABLE editor.libro
 );
 GO
 
-
 --! Tabla Prestamo
-CREATE TABLE bibliotecario.prestamo
+CREATE TABLE prestamos.prestamo
 (
     id_prestamo INT IDENTITY(1,1),
     fecha_prestamo DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -84,21 +84,20 @@ CREATE TABLE bibliotecario.prestamo
 
     CONSTRAINT fk_id_empleado_prestamo
         FOREIGN KEY (id_empleado)
-        REFERENCES empleado(id_empleado)
+        REFERENCES rrhh.empleado(id_empleado)
         ON UPDATE CASCADE
         ON DELETE NO ACTION,
 
     CONSTRAINT fk_id_socio_prestamo
         FOREIGN KEY (id_socio)
-        REFERENCES socio(id_socio)
+        REFERENCES socios.socio(id_socio)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
 
-
 --! Tabla Multa
-CREATE TABLE bibliotecario.multa
+CREATE TABLE socios.multa
 (
     id_multa INT IDENTITY(1,1),
     fecha_multa DATE NOT NULL,
@@ -116,15 +115,14 @@ CREATE TABLE bibliotecario.multa
 
     CONSTRAINT fk_id_prestamo_multa
         FOREIGN KEY (id_prestamo)
-        REFERENCES prestamo(id_prestamo)
+        REFERENCES prestamos.prestamo(id_prestamo)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
 
-
 --! Tabla Ejemplar
-CREATE TABLE bibliotecario.ejemplar
+CREATE TABLE catalogo.ejemplar
 (
     id_ejemplar INT IDENTITY(1,1),
     estado VARCHAR(20) NOT NULL DEFAULT 'LIBRE',
@@ -137,15 +135,14 @@ CREATE TABLE bibliotecario.ejemplar
 
     CONSTRAINT fk_id_libro_ejemplar
         FOREIGN KEY (id_libro)
-        REFERENCES libro(id_libro)
+        REFERENCES catalogo.libro(id_libro)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
 
-
 --! Tabla Prestamo Ejemplar
-CREATE TABLE bibliotecario.prestamo_ejemplar
+CREATE TABLE prestamos.prestamo_ejemplar
 (
     id_prestamo INT NOT NULL,
     id_ejemplar INT NOT NULL,
@@ -155,25 +152,24 @@ CREATE TABLE bibliotecario.prestamo_ejemplar
 
     CONSTRAINT fk_id_prestamo_prestamo_ejemplar
         FOREIGN KEY (id_prestamo)
-        REFERENCES prestamo(id_prestamo)
+        REFERENCES prestamos.prestamo(id_prestamo)
         ON UPDATE CASCADE
         ON DELETE NO ACTION,
 
     CONSTRAINT fk_id_ejemplar_prestamo_ejemplar
         FOREIGN KEY (id_ejemplar)
-        REFERENCES ejemplar(id_ejemplar)
+        REFERENCES catalogo.ejemplar(id_ejemplar)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
-
 
 -- ==========================================================
 -- PARTE DE LIBROS DE LA BIBLIOTECA
 -- ==========================================================
 
 --! Tabla Editorial
-CREATE TABLE editor.editorial
+CREATE TABLE catalogo.editorial
 (
     id_editorial INT IDENTITY(1,1),
     nombre VARCHAR(150) NOT NULL,
@@ -194,9 +190,8 @@ CREATE TABLE editor.editorial
 );
 GO
 
-
 --! Tabla Libro Editorial
-CREATE TABLE editor.libro_editorial
+CREATE TABLE catalogo.libro_editorial
 (
     id_libro INT NOT NULL,
     id_editorial INT NOT NULL,
@@ -206,21 +201,20 @@ CREATE TABLE editor.libro_editorial
 
     CONSTRAINT fk_id_libro_libro_editorial
         FOREIGN KEY (id_libro)
-        REFERENCES libro(id_libro)
+        REFERENCES catalogo.libro(id_libro)
         ON UPDATE CASCADE
         ON DELETE NO ACTION,
 
     CONSTRAINT fk_id_editorial_libro_editorial
         FOREIGN KEY (id_editorial)
-        REFERENCES editorial(id_editorial)
+        REFERENCES catalogo.editorial(id_editorial)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
 
-
 --! Tabla Autor
-CREATE TABLE editor.autor
+CREATE TABLE catalogo.autor
 (
     id_autor INT IDENTITY(1,1),
     nombre VARCHAR(100) NOT NULL,
@@ -235,9 +229,8 @@ CREATE TABLE editor.autor
 );
 GO
 
-
 --! Tabla Genero
-CREATE TABLE editor.genero
+CREATE TABLE catalogo.genero
 (
     id_genero INT IDENTITY(1,1),
     nombre VARCHAR(150) NOT NULL,
@@ -248,9 +241,8 @@ CREATE TABLE editor.genero
 );
 GO
 
-
 --! Tabla Libro Genero
-CREATE TABLE editor.libro_genero
+CREATE TABLE catalogo.libro_genero
 (
     id_genero INT NOT NULL,
     id_libro INT NOT NULL,
@@ -260,21 +252,20 @@ CREATE TABLE editor.libro_genero
 
     CONSTRAINT fk_id_genero_libro_genero
         FOREIGN KEY (id_genero)
-        REFERENCES genero(id_genero)
+        REFERENCES catalogo.genero(id_genero)
         ON UPDATE CASCADE
         ON DELETE NO ACTION,
 
     CONSTRAINT fk_id_libro_libro_genero
         FOREIGN KEY (id_libro)
-        REFERENCES libro(id_libro)
+        REFERENCES catalogo.libro(id_libro)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );
 GO
 
-
 --! Tabla Libro Autor
-CREATE TABLE editor.libro_autor
+CREATE TABLE catalogo.libro_autor
 (
     id_libro INT NOT NULL,
     id_autor INT NOT NULL,
@@ -284,13 +275,13 @@ CREATE TABLE editor.libro_autor
 
     CONSTRAINT fk_id_libro_libro_autor
         FOREIGN KEY (id_libro)
-        REFERENCES libro(id_libro)
+        REFERENCES catalogo.libro(id_libro)
         ON UPDATE CASCADE
         ON DELETE NO ACTION,
 
     CONSTRAINT fk_id_autor_libro_autor
         FOREIGN KEY (id_autor)
-        REFERENCES autor(id_autor)
+        REFERENCES catalogo.autor(id_autor)
         ON UPDATE CASCADE
         ON DELETE NO ACTION
 );

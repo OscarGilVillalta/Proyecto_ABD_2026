@@ -1,204 +1,169 @@
-# Proyecto ABD 2026 - Sistema de Biblioteca
+<p align="center">
+  <img alt="SQL Server" src="https://img.shields.io/badge/SQL%20Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white">
+  <img alt="T-SQL" src="https://img.shields.io/badge/T--SQL-0078D4?style=for-the-badge&logo=azuredataexplorer&logoColor=white">
+  <img alt="Power BI" src="https://img.shields.io/badge/Power%20BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black">
+</p>
 
-Base de datos relacional para la administración de una biblioteca, implementada en **SQL Server**. Incluye el esquema de tablas, triggers de validación, procedimientos almacenados y la carga masiva de datos de prueba desde archivos CSV.
+# Proyecto ABD 2026 — Sistema de Biblioteca
 
-## Estructura del repositorio
+Base de datos relacional para la administración de una biblioteca, implementada en **SQL Server**. El proyecto reúne el esquema, las reglas de negocio mediante triggers y procedimientos almacenados, la seguridad basada en roles, la auditoría, las vistas para Power BI, la carga masiva de datos de prueba y la estrategia de respaldo y recuperación.
+
+La base de datos se denomina **`Biblioteca`** y está organizada por esquemas para separar las áreas funcionales del sistema. En palabras simples: cada área tiene su espacio y todo se mantiene ordenado.
+
+> <span style="color:#1D4ED8">**Sugerencia:**</span> si es tu primera vez en el proyecto, comienza por la estructura y el orden de ejecución; el resto del documento cobra sentido después.
+
+---
+
+## 📁 Estructura del repositorio
+
+```
+Proyecto_ABD_2026/
+│
+├── scripts/                     Scripts de construcción de la base de datos
+│   ├── 01_database_creation.sql
+│   ├── 02_stored_procedures_and_triggers.sql
+│   ├── 03_audit.sql
+│   ├── 04_security_role_users.sql
+│   ├── 05_server_logins.sql
+│   ├── 06_advanced_queries.sql
+│   ├── 06_login_user_creation.sql
+│   ├── 07_indexes_optimization.sql
+│   ├── 07_user_role_assignment.sql
+│   └── 08_views_powerbi.sql
+│
+├── data/                        Datos de prueba en formato CSV
+│   └── *.csv
+│
+├── utils/                       Scripts de apoyo
+│   ├── upload_data.sql
+│   └── useful_queries.sql
+│
+├── backup/                      Respaldos y estrategia de recuperación
+│   ├── Biblioteca.bak
+│   ├── Biblioteca_20261110.bak
+│   ├── restore.sql
+│   └── estrategia/
+│       ├── README.md
+│       ├── NOTA_SOBRE_BAK_Y_JOBS.md
+│       └── scripts/
+│           ├── 01_configuracion.sql
+│           ├── 02_job_full.sql
+│           ├── 03_job_differential.sql
+│           ├── 04_job_log.sql
+│           └── 05_restauracion.sql
+│
+├── README.md
+├── temp.sql                     Archivo temporal (excluido por .gitignore)
+└── .gitignore
+```
+
+---
+
+## 📂 Descripción de las carpetas
+
+### `scripts/`
+
+Contiene los scripts que construyen la base de datos. El orden de ejecución es relevante: cada script prepara el terreno para el siguiente.
 
 | Archivo | Descripción |
 | --- | --- |
-| `Base_Datos.sql` | Crea la base de datos `Proyecto` y todas las tablas con sus llaves y restricciones. |
-| `Triggers_ProcesosAlmacenados.sql` | Crea los triggers y procedimientos almacenados del negocio. |
-| `utils/upload_data.sql` | Carga masiva de los CSV (`BULK INSERT`) y resumen de filas por tabla. |
-| `data/*.csv` | Datos de prueba de cada tabla. |
-| `db_diagrama/Diagrama_Relacional.png` | Diagrama relacional de la base de datos. |
+| `01_database_creation.sql` | Crea la base `Biblioteca`, los cinco esquemas y todas las tablas con sus llaves primarias, llaves foráneas y restricciones `CHECK` y `UNIQUE`. |
+| `02_stored_procedures_and_triggers.sql` | Crea el trigger de generación de multas por retraso y el procedimiento almacenado para procesar préstamos. |
+| `03_audit.sql` | Configura la auditoría del servidor (`Audit_Biblioteca`) y la especificación de auditoría de la base de datos. |
+| `04_security_role_users.sql` | Crea los once roles, asigna sus permisos y verifica la existencia de los usuarios. |
+| `05_server_logins.sql` | Crea los logins del servidor y los vincula con la base de datos. |
+| `06_advanced_queries.sql` | Consultas avanzadas de ejemplo: ranking de libros, meses con mayor cantidad de préstamos, socios con multas, entre otras. |
+| `06_login_user_creation.sql` | Alternativa para crear logins asociados a los roles del sistema. |
+| `07_indexes_optimization.sql` | Define los índices orientados a optimizar las consultas de reportes. |
+| `07_user_role_assignment.sql` | Asigna cada usuario al rol correspondiente. |
+| `08_views_powerbi.sql` | Define las vistas destinadas a los reportes de Power BI. |
 
-## Orden de ejecución
+> <span style="color:#B45309">**Importante:**</span> `04_security_role_users.sql` requiere que los logins de `05_server_logins.sql` existan previamente.
 
-1. `Base_Datos.sql` — crea la base y el esquema.
-2. `Triggers_ProcesosAlmacenados.sql` — crea triggers y procedimientos.
-3. Copiar la carpeta `data` al contenedor de SQL Server y ejecutar `utils/upload_data.sql`.
+## 🚀 Orden de ejecución
 
-> La carga usa rutas del contenedor (`/data/data/<tabla>.csv`). Ver las instrucciones comentadas al inicio de `utils/upload_data.sql`.
+Para levantar el proyecto desde cero, se recomienda seguir esta secuencia:
 
-## Tablas
+1. `scripts/01_database_creation.sql` — crea la base de datos y el esquema.
+2. `scripts/02_stored_procedures_and_triggers.sql` — crea el trigger y el procedimiento almacenado.
+3. `scripts/03_audit.sql` — configura la auditoría.
+4. `scripts/05_server_logins.sql` — crea los logins del servidor.
+5. `scripts/04_security_role_users.sql` — crea los roles, permisos y usuarios.
+6. `scripts/07_user_role_assignment.sql` — asigna los usuarios a los roles.
+7. `scripts/07_indexes_optimization.sql` — crea los índices.
+8. `scripts/08_views_powerbi.sql` — crea las vistas para reportes.
+9. Copiar la carpeta `data/` al contenedor y ejecutar `utils/upload_data.sql`.
 
-### Empleado
+La carga masiva utiliza rutas del contenedor (`/data/data/<tabla>.csv`). Las instrucciones detalladas están documentadas al inicio de `utils/upload_data.sql`.
 
-Personal que atiende los préstamos.
+> <span style="color:#0B6E4F">**Consejo:**</span> ejecutar los scripts en otro orden suele terminar en un mensaje de error de dependencias. La secuencia anterior evita ese desvío.
 
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_empleado` | INT IDENTITY | PK |
-| `dui` | VARCHAR(10) | NOT NULL, UNIQUE |
-| `nombre` | VARCHAR(100) | NOT NULL |
-| `apellido` | VARCHAR(100) | NOT NULL |
-| `fecha_nacimiento` | DATE | NOT NULL |
-| `sexo` | CHAR(1) | NOT NULL, CHECK `M`/`F` |
+## 📊 Vistas para Power BI
 
-### Socio
+Definidas en `scripts/08_views_powerbi.sql`:
 
-Usuarios que solicitan préstamos.
+| Vista | Descripción |
+| --- | --- |
+| `vw_TendenciaMensual` | Cantidad de préstamos por mes y año. |
+| `vw_TendenciaYAcumuladoMensual` | Tendencia mensual con acumulado anual. |
+| `vw_Top3LibrosPorGenero` | Los tres libros más prestados por género. |
+| `vw_ClasificacionSocios` | Clasificación de socios según su actividad. |
+| `vw_PrestamosPorEmpleadoPivot` | Préstamos por empleado en formato pivot. |
 
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_socio` | INT IDENTITY | PK |
-| `dui` | VARCHAR(10) | NOT NULL, UNIQUE |
-| `nombre` | VARCHAR(100) | NOT NULL |
-| `apellido` | VARCHAR(100) | NOT NULL |
-| `fecha_nacimiento` | DATE | NOT NULL |
-| `sexo` | CHAR(1) | NOT NULL, CHECK `M`/`F` |
+---
 
-### Libro
+## 🔐 Seguridad
 
-Obras disponibles en la biblioteca.
+`scripts/04_security_role_users.sql` crea once roles con permisos separados por área:
 
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_libro` | INT IDENTITY | PK |
-| `nombre` | VARCHAR(150) | NOT NULL |
-| `fecha_publicacion` | DATE | NOT NULL |
+`rol_bibliotecario`, `rol_usuario_biblioteca`, `rol_programador`, `rol_seguridad`, `rol_gestor_multas`, `rol_gestor_prestamos`, `rol_gestor_socios`, `rol_gestor_rrhh`, `rol_analista`, `rol_profesor` y `rol_backup`.
 
-### Prestamo
+Los logins se crean en `05_server_logins.sql` (usuarios nominales) o en `06_login_user_creation.sql` (logins genéricos por rol).
 
-Registro de préstamos realizados.
+> <span style="color:#B45309">**Importante:**</span> las contraseñas incluidas en los scripts son provisionales y deben reemplazarse por credenciales seguras antes de ejecutarlos en un entorno real.
 
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_prestamo` | INT IDENTITY | PK |
-| `fecha_prestamo` | DATETIME2 | NOT NULL, DEFAULT `SYSDATETIME()` |
-| `fecha_limite` | DATE | NOT NULL |
-| `fecha_devolucion` | DATETIME2 | NULL |
-| `estado` | VARCHAR(15) | NOT NULL, DEFAULT `ACTIVO`, CHECK `ACTIVO`/`DEVUELTO`/`ATRASADO` |
-| `id_empleado` | INT | FK → `empleado`, ON UPDATE CASCADE |
-| `id_socio` | INT | FK → `socio`, ON UPDATE CASCADE |
+---
 
-### Multa
+## 🕵️ Auditoría
 
-Multas generadas por devoluciones tardías.
+`scripts/03_audit.sql` configura `Audit_Biblioteca`, una auditoría a nivel de servidor que registra los eventos en archivos dentro del directorio `/audit/`. La especificación de auditoría de la base de datos registra las operaciones `INSERT`, `UPDATE` y `DELETE` sobre las tablas `prestamos.prestamo`, `socios.multa` y `socios.socio`, así como la ejecución de `operaciones.sp_procesar_prestamo`.
 
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_multa` | INT IDENTITY | PK |
-| `fecha_multa` | DATE | NOT NULL |
-| `estado` | VARCHAR(15) | NOT NULL, DEFAULT `PENDIENTE`, CHECK `PENDIENTE`/`PAGADO`/`CANCELADO` |
-| `monto` | DECIMAL(10,2) | NOT NULL, CHECK `monto > 0` |
-| `id_prestamo` | INT | FK → `prestamo`, ON UPDATE CASCADE |
+---
 
-### Ejemplar
+## 🧪 Datos de prueba
 
-Copias físicas de cada libro.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_ejemplar` | INT IDENTITY | PK |
-| `estado` | VARCHAR(20) | NOT NULL, DEFAULT `LIBRE`, CHECK `LIBRE`/`PRESTADO`/`RESERVADO`/`FUERA_SERVICIO` |
-| `id_libro` | INT | FK → `libro`, ON UPDATE CASCADE |
-
-### Prestamo_Ejemplar
-
-Relación N:M entre préstamos y ejemplares.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_prestamo` | INT | PK, FK → `prestamo` |
-| `id_ejemplar` | INT | PK, FK → `ejemplar` |
-
-### Editorial
-
-Editoriales de los libros.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_editorial` | INT IDENTITY | PK |
-| `nombre` | VARCHAR(150) | NOT NULL, UNIQUE |
-| `correo` | VARCHAR(150) | NOT NULL, UNIQUE, CHECK contiene `@` |
-| `telefono` | VARCHAR(20) | NOT NULL, CHECK solo dígitos, `+`, espacio y `-` |
-| `direccion` | VARCHAR(250) | NOT NULL |
-
-### Libro_Editorial
-
-Relación N:M entre libros y editoriales.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_libro` | INT | PK, FK → `libro` |
-| `id_editorial` | INT | PK, FK → `editorial` |
-
-### Autor
-
-Autores de las obras.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_autor` | INT IDENTITY | PK |
-| `nombre` | VARCHAR(100) | NOT NULL |
-| `apellido` | VARCHAR(100) | NOT NULL |
-| `fecha_nacimiento` | DATE | NOT NULL |
-| `sexo` | CHAR(1) | NOT NULL, CHECK `M`/`F` |
-
-### Genero
-
-Géneros literarios.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_genero` | INT IDENTITY | PK |
-| `nombre` | VARCHAR(150) | NOT NULL, UNIQUE |
-
-### Libro_Genero
-
-Relación N:M entre libros y géneros.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_genero` | INT | PK, FK → `genero` |
-| `id_libro` | INT | PK, FK → `libro` |
-
-### Libro_Autor
-
-Relación N:M entre libros y autores.
-
-| Columna | Tipo | Restricciones |
-| --- | --- | --- |
-| `id_libro` | INT | PK, FK → `libro` |
-| `id_autor` | INT | PK, FK → `autor` |
-
-## Triggers
-
-| Trigger | Tabla | Descripción |
-| --- | --- | --- |
-| `trg_prestamo_estado_fechas` | `prestamo` | Valida coherencia de fechas y estado: `fecha_limite` no anterior al préstamo, devolución no futura, `ACTIVO` sin devolución, `ATRASADO` con devolución tardía y `DEVUELTO` a tiempo. |
-| `trg_prestamo_multa` | `prestamo` | Al quedar un préstamo en estado `ATRASADO`, genera automáticamente una multa `PENDIENTE` con monto de **2.50 por día de retraso** (si no existe ya una multa para ese préstamo). |
-| `trg_prestamo_max_activos` | `prestamo` | Impide que un socio tenga más de **3 préstamos** en estado `ACTIVO`. |
-| `trg_prestamo_ejemplar_unico_abierto` | `prestamo_ejemplar` | Impide que un mismo ejemplar esté asociado a más de un préstamo `ACTIVO`. |
-
-## Procedimientos almacenados
-
-| Procedimiento | Parámetros | Descripción |
-| --- | --- | --- |
-| `usp_prestar_ejemplar` | `@id_socio`, `@id_empleado`, `@id_ejemplar`, `@fecha_limite` (opcional), `@id_prestamo` (OUTPUT) | Registra un préstamo. Valida existencia de socio/empleado/ejemplar, que el ejemplar esté `LIBRE`, que el socio no tenga multas `PENDIENTE` ni más de 3 préstamos activos. Por defecto la fecha límite es de 14 días (máximo 60). Marca el ejemplar como `PRESTADO`. |
-| `usp_devolver_prestamo` | `@id_prestamo`, `@fecha_devolucion` (opcional), `@estado`, `@dias_retraso`, `@monto_multa`, `@id_multa` (OUTPUT) | Registra la devolución. Calcula días de retraso y monto, deja el préstamo en `ATRASADO` o `DEVUELTO`, y libera el ejemplar (`LIBRE`) cuando ya no tiene préstamos activos. |
-| `usp_pagar_multa` | `@id_multa`, `@estado` (OUTPUT) | Cambia una multa `PENDIENTE` a `PAGADO`. |
-| `usp_cancelar_multa` | `@id_multa`, `@estado` (OUTPUT) | Cambia una multa `PENDIENTE` a `CANCELADO`. |
-
-## Datos de prueba
-
-Los CSV de `data/` incluyen cabecera y se cargan respetando las identidades (`KEEPIDENTITY`).
+Los archivos CSV de `data/` incluyen cabecera y se cargan respetando las identidades mediante `KEEPIDENTITY`.
 
 | Tabla | Archivo | Filas |
 | --- | --- | ---: |
-| `empleado` | `empleado.csv` | 5 000 |
-| `socio` | `socio.csv` | 8 000 |
-| `editorial` | `editorial.csv` | 600 |
-| `autor` | `autor.csv` | 1 000 |
-| `genero` | `genero.csv` | 300 |
-| `libro` | `libro.csv` | 2 000 |
-| `libro_autor` | `libro_autor.csv` | 1 000 |
-| `libro_editorial` | `libro_editorial.csv` | 2 000 |
-| `libro_genero` | `libro_genero.csv` | 2 000 |
-| `prestamo` | `prestamo.csv` | 30 000 |
-| `ejemplar` | `ejemplar.csv` | 8 000 |
-| `prestamo_ejemplar` | `prestamo_ejemplar.csv` | 30 000 |
-| `multa` | `multa.csv` | 6 015 |
+| `rrhh.empleado` | `empleado.csv` | 5 000 |
+| `socios.socio` | `socio.csv` | 8 000 |
+| `catalogo.editorial` | `editorial.csv` | 600 |
+| `catalogo.autor` | `autor.csv` | 1 000 |
+| `catalogo.genero` | `genero.csv` | 300 |
+| `catalogo.libro` | `libro.csv` | 2 000 |
+| `catalogo.libro_autor` | `libro_autor.csv` | 1 000 |
+| `catalogo.libro_editorial` | `libro_editorial.csv` | 2 000 |
+| `catalogo.libro_genero` | `libro_genero.csv` | 2 000 |
+| `prestamos.prestamo` | `prestamo.csv` | 30 000 |
+| `catalogo.ejemplar` | `ejemplar.csv` | 8 000 |
+| `prestamos.prestamo_ejemplar` | `prestamo_ejemplar.csv` | 30 000 |
+| `socios.multa` | `multa.csv` | 6 015 |
 
-Al final de `utils/upload_data.sql` se ejecuta una consulta que devuelve el **nombre de cada tabla y su cantidad de filas** para verificar la carga.
+Al final de `utils/upload_data.sql` se ejecuta una consulta que devuelve el nombre de cada tabla y su cantidad de filas para verificar la carga.
+
+---
+
+## 💾 Respaldos
+
+La carpeta `backup/` contiene los archivos `.bak` de referencia y `restore.sql` para la restauración. La estrategia automática se encuentra en `backup/estrategia/` y utiliza **SQL Server Agent** con la siguiente programación:
+
+- Respaldo **FULL**: diario a las 00:00.
+- Respaldo **DIFFERENTIAL**: a las 06:00, 12:00 y 18:00.
+- Respaldo **LOG**: cada 15 minutos.
+
+Los archivos se almacenan en `/var/opt/mssql/backup/{full,differential,log}`.
+
+Los respaldos incluyen los objetos propios de la base de datos (esquema, datos, usuarios y roles de base, y la especificación de auditoría). No incluyen objetos de nivel de servidor, como los logins, los Jobs de SQL Server Agent ni la auditoría de servidor. Por lo tanto, al restaurar la base en otra instancia es necesario recrear dichos objetos con los scripts correspondientes y remapear los usuarios para evitar usuarios huérfanos.
+
+> <span style="color:#1D4ED8">**Recordatorio:**</span> los archivos `.bak` y los Jobs viven en el servidor. Al clonar el repositorio en otra máquina, la base se restaura, pero los Jobs deben configurarse de nuevo.
